@@ -9,7 +9,7 @@ class RoundButton extends StatelessWidget {
     super.key,
     required this.title,
     required this.onTap,
-    this.loading = false,
+    this.loading,
   });
 
   @override
