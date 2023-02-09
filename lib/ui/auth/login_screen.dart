@@ -1,7 +1,10 @@
 import 'package:firebase_practise/ui/auth/signup_screen.dart';
+import 'package:firebase_practise/ui/posts/posts_screen.dart';
 import 'package:firebase_practise/ui/widget/round_button.dart';
+import 'package:firebase_practise/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,15 +14,41 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool loading = false;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final _formkey = GlobalKey<FormState>();
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void dispose() {
     super.dispose();
     emailController.dispose();
     passwordController.dispose();
+  }
+
+  void login() {
+    setState(() {
+      loading = true;
+    });
+    _auth
+        .signInWithEmailAndPassword(
+            email: emailController.text.toString(),
+            password: passwordController.text.toString())
+        .then((value) {
+      setState(() {
+        loading = false;
+      });
+      Utils().toastMessage(value.user!.email.toString());
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => PostScreen()));
+    }).onError((error, stackTrace) {
+      debugPrint(error.toString());
+      Utils().toastMessage(error.toString());
+      setState(() {
+        loading = false;
+      });
+    });
   }
 
   @override
@@ -86,9 +115,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 50,
               ),
               RoundButton(
+                loading: loading,
                 title: 'Login',
                 onTap: () {
-                  if (_formkey.currentState!.validate()) {}
+                  if (_formkey.currentState!.validate()) {
+                    login();
+                  }
                 },
               ),
               Row(
