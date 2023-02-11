@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class RoundButton extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
+  // ignore: prefer_typing_uninitialized_variables
   final loading;
 
   const RoundButton({

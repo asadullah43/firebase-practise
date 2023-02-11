@@ -1,3 +1,4 @@
+import 'package:firebase_practise/ui/auth/phone_auth/login_with_phone_number.dart';
 import 'package:firebase_practise/ui/auth/signup_screen.dart';
 import 'package:firebase_practise/ui/posts/posts_screen.dart';
 import 'package:firebase_practise/ui/widget/round_button.dart';
@@ -136,6 +137,26 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                       child: const Text('Sign up'))
                 ],
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginWithPhoneNumber()));
+                },
+                child: Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      border: Border.all(color: Colors.black)),
+                  child: const Center(
+                    child: Text('Login with phone'),
+                  ),
+                ),
               )
             ],
           ),
