@@ -18,8 +18,11 @@ class _PostScreenState extends State<PostScreen> {
   Widget build(BuildContext context) {
     final auth = FirebaseAuth.instance;
     final ref = FirebaseDatabase.instance.ref('Post');
+    final searchFilter = TextEditingController();
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        centerTitle: true,
         title: const Text('Post screen'),
         actions: [
           IconButton(
@@ -49,39 +52,67 @@ class _PostScreenState extends State<PostScreen> {
       ),
       body: Column(
         children: [
-          Expanded(
-              child: StreamBuilder(
-            stream: ref.onValue,
-            builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
-              if (!snapshot.hasData) {
-                const CircularProgressIndicator();
-              } else {
-                Map<dynamic, dynamic> map =
-                    snapshot.data!.snapshot.value as dynamic;
-                List<dynamic> list = [];
-                list.clear();
-                list = map.values.toList();
-                return ListView.builder(
-                  itemCount: snapshot.data!.snapshot.children.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(list[index]['title']),
-                      subtitle: Text(list[index]['id']),
-                    );
-                  },
-                );
-              }
-              return Text('');
-            },
-          )),
+          const SizedBox(
+            height: 10,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: TextFormField(
+              controller: searchFilter,
+              decoration: const InputDecoration(
+                hintText: 'Search',
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (String value) {
+                setState(() {});
+              },
+            ),
+          ),
+          //fetching data by using stream builder
+          // Expanded(
+          //     child: StreamBuilder(
+          //   stream: ref.onValue,
+          //   builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
+          //     if (!snapshot.hasData) {
+          //       const CircularProgressIndicator();
+          //     } else {
+          //       Map<dynamic, dynamic> map =
+          //           snapshot.data!.snapshot.value as dynamic;
+          //       List<dynamic> list = [];
+          //       list.clear();
+          //       list = map.values.toList();
+          //       return ListView.builder(
+          //         itemCount: snapshot.data!.snapshot.children.length,
+          //         itemBuilder: (context, index) {
+          //           return ListTile(
+          //             title: Text(list[index]['title']),
+          //             subtitle: Text(list[index]['id']),
+          //           );
+          //         },
+          //       );
+          //     }
+          //     return const Text('');
+          //   },
+          // )),
+          //fetching data by using firebase animated list
           Expanded(
             child: FirebaseAnimatedList(
                 defaultChild: const Text('loading'),
                 query: ref,
                 itemBuilder: (context, snapshot, animation, index) {
-                  return ListTile(
-                    title: Text(snapshot.child('title').value.toString()),
-                  );
+                  final title = snapshot.child('title').value.toString();
+                  if (searchFilter.text.isEmpty) {
+                    return ListTile(
+                      title: Text(snapshot.child('title').value.toString()),
+                    );
+                  } else if (title.toLowerCase().contains(
+                      searchFilter.text.toLowerCase().toLowerCase())) {
+                    return ListTile(
+                      title: Text(snapshot.child('title').value.toString()),
+                    );
+                  } else {
+                    return Container();
+                  }
                 }),
           )
         ],
