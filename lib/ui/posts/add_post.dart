@@ -37,22 +37,22 @@ class _AddPostState extends State<AddPost> {
             loading: loading,
             title: 'Add',
             onTap: () {
-
               setState(() {
-                loading=true;
+                loading = true;
               });
-              databaseRef.child(DateTime.now().millisecondsSinceEpoch.toString()).set({
+              String id = DateTime.now().millisecondsSinceEpoch.toString();
+              databaseRef.child(id).set({
                 'title': postController.text.toString(),
-                'id':DateTime.now().millisecondsSinceEpoch.toString(),
+                'id': id,
               }).then((value) {
                 Utils().toastMessage('Post Added');
                 setState(() {
-                  loading=false;
+                  loading = false;
                 });
               }).onError((error, stackTrace) {
                 Utils().toastMessage(error.toString());
                 setState(() {
-                  loading=false;
+                  loading = false;
                 });
               });
             },
