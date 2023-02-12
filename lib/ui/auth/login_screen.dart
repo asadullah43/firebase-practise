@@ -1,5 +1,6 @@
 import 'package:firebase_practise/ui/auth/phone_auth/login_with_phone_number.dart';
 import 'package:firebase_practise/ui/auth/signup_screen.dart';
+import 'package:firebase_practise/ui/firestore/firestore_screen.dart';
 import 'package:firebase_practise/ui/posts/posts_screen.dart';
 import 'package:firebase_practise/ui/widget/round_button.dart';
 import 'package:firebase_practise/utils/utils.dart';
@@ -41,8 +42,8 @@ class _LoginScreenState extends State<LoginScreen> {
         loading = false;
       });
       Utils().toastMessage(value.user!.email.toString());
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const PostScreen()));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const FireStoreScreen()));
     }).onError((error, stackTrace) {
       debugPrint(error.toString());
       Utils().toastMessage(error.toString());
