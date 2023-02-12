@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_practise/ui/auth/login_screen.dart';
+import 'package:firebase_practise/ui/posts/posts_screen.dart';
 import 'package:firebase_practise/ui/widget/round_button.dart';
 import 'package:firebase_practise/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -105,6 +106,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
               title: 'Sign up',
               loading: loading,
               onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const PostScreen()));
                 if (_formkey.currentState!.validate()) {
                   signUp();
                 }
