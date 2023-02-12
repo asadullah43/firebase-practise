@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_practise/ui/widget/round_button.dart';
 import 'package:firebase_practise/utils/utils.dart';
 import 'package:flutter/material.dart';

@@ -1,7 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_practise/ui/auth/login_screen.dart';
 import 'package:firebase_practise/ui/firestore/add_firestor_data.dart';
-import 'package:firebase_practise/ui/posts/add_post.dart';
+
 import 'package:firebase_practise/utils/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +15,7 @@ class FireStoreScreen extends StatefulWidget {
 
 class _FireStoreScreenState extends State<FireStoreScreen> {
   final auth = FirebaseAuth.instance;
+  final fireStore = FirebaseFirestore.instance.collection('users').snapshots();
 
   final editControler = TextEditingController();
   @override
@@ -56,13 +58,26 @@ class _FireStoreScreenState extends State<FireStoreScreen> {
           const SizedBox(
             height: 10,
           ),
-
-          //fetching data by using firebase animated list
-          Expanded(child: ListView.builder(itemBuilder: (context, index) {
-            return ListTile(
-              title: Text('asad'),
-            );
-          })),
+          StreamBuilder<QuerySnapshot>(
+              stream: fireStore,
+              builder: ((BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                }
+                if (snapshot.hasError) {
+                  const Text('Some erorr');
+                }
+                return Expanded(
+                    child: ListView.builder(
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(
+                                snapshot.data!.docs[index]['title'].toString()),
+                          );
+                        }));
+              })),
         ],
       ),
     );
